@@ -69,7 +69,7 @@ class EmergencyDonation extends BloodDonation {
 
     @Override
     public boolean isEligibleToDonate() {
-        return isUrgent && getDonationAmount() <= 500;
+        return isUrgent && getDonationAmount() <= 470;
     }
 }
 
