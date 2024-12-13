@@ -1,5 +1,4 @@
 # 🩸 **Blood Bank Management System**  
-
 [![Java](https://img.shields.io/badge/Java-Programming-orange)](https://www.oracle.com/java/)  
 [![SDG 3](https://img.shields.io/badge/SDG-3-blue)](https://sdgs.un.org/goals/goal3)  
 
@@ -125,8 +124,51 @@ By connecting donors and recipients efficiently, this system helps address criti
 
 ---
 
-For further assistance, refer to the project repository’s [Issues](https://github.com/your-username/blood-bank-management/issues) page or contact the developers.  
+## 1. **Donor Login Menu**
+**Description:** Donors can enter their username and password to access the system. <br>
+ &emsp; [1] Log In <br>
+ &emsp; [2] Create New Account <br>
+ &emsp; [3] Exit <br>
+
+![Donor Login Screenshot](screenshots/login.png)
+
+## 2. **Main Menu**
+**Description:** The main menu provides options for donors to <br>
+ &emsp; [1] Add Regular Donation <br>
+ &emsp; [2] Add Emergency Donation <br>
+ &emsp; [3] List Donation <br>
+ &emsp; [4] Find Compatible Donations <br>
+ &emsp; [5] Log Out <br>
+
+![Main Menu Screenshot](screenshots/main_menu.png)
+
+---
+
+## 3. **Add Regular Donation**
+**Description:** The form to add regular donation includes donor name, blood type, age, and donation amount.
+
+![Add Regular Donation Screenshot](screenshots/add_regular.png)
+
+---
+
+## 4. **List Donations**
+**Description:** Displays the list of all recorded donations, categorized into regular and emergency donations. <br>
+ &emsp; [1] View Regular Donations <br>
+ &emsp; [2] View Emergency Donations <br>
+ &emsp; [3] Return to Donor Menu <br>
+
+![List Donations Screenshot](screenshots/list_donation.png)
+
+---
+
+## 5. **Find Compatible Donations**
+**Description:** Shows compatible donations based on a specified blood type.
+
+![Find Compatible Donations Screenshot](screenshots/find_compatible.png)
+
+For further assistance, refer to the project repository’s [Issues](https://github.com/Azeltdz/Dela_Cruz_Final_Project_OOP_Blood_Bank_Management_System/issues) page or contact the developers.  
 
 Happy coding! 🎉
 
-
+### 📫 Connect with Me  
+- 👤 [GitHub Profile](https://github.com/Azeltdz)
