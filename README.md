@@ -1,7 +1,7 @@
 # 🩸 **Blood Bank Management System**  
 
 [![Java](https://img.shields.io/badge/Java-Programming-orange)](https://www.oracle.com/java/)  
-[![SDG 3](https://img.shields.io/badge/SDG-13-blue)](https://sdgs.un.org/goals/goal3)  
+[![SDG 3](https://img.shields.io/badge/SDG-3-blue)](https://sdgs.un.org/goals/goal3)  
 
 ---
 
