@@ -1,10 +1,20 @@
 import java.util.*;
 
+// ANSI escape codes for text colors
+class TextColor {
+    public static final String RESET = "\u001B[0m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String CYAN = "\u001B[36m";
+}
+
 // Abstract class
 abstract class BloodDonation {
     private String donorName;
     private String bloodType;
-    private int donationAmount; // in ml
+    private int donationAmount;
 
     public BloodDonation(String donorName, String bloodType, int donationAmount) {
         this.donorName = donorName;
@@ -45,7 +55,7 @@ class RegularDonation extends BloodDonation {
     public void displayEligibilityMessage() {
         System.out.println(isEligibleToDonate() 
             ? "\t\t\t\tDonor is eligible for donation" 
-            : "\t\t\t\tDonor is not eligible for donation");
+            : TextColor.RED + "\t\t\t\tDonor is not eligible for donation" + TextColor.RESET);
     }
 }
 // =================================================== Emergency Donation Class ===================================================
@@ -69,7 +79,7 @@ interface BloodBankOperations {
     void findCompatibleDonations(String requiredBloodType);
 }
 // =================================================== Blood bank Class ===================================================
-class BloodBank implements BloodBankOperations {
+class BloodBank implements BloodBankOperations { // Interface 
     private ArrayList<BloodDonation> regularDonations;
     private ArrayList<BloodDonation> emergencyDonations;
     private Scanner scanner;
@@ -77,7 +87,7 @@ class BloodBank implements BloodBankOperations {
     public BloodBank() {
         regularDonations = new ArrayList<>();
         emergencyDonations = new ArrayList<>();
-        scanner = new Scanner(System.in); // Create the scanner once
+        scanner = new Scanner(System.in);
     }
 
     @Override
@@ -88,24 +98,27 @@ class BloodBank implements BloodBankOperations {
             } else if (donation instanceof EmergencyDonation) {
                 emergencyDonations.add(donation);
             }
-            System.out.println("\n\t\t\t\t--- Donation added successfully! ---");
+            System.out.println(TextColor.GREEN + "\n\t\t\t\t--- Donation added successfully! ---" + TextColor.RESET);
         } else {
-            System.out.println("\n\t\t\t\t--- Donation failed ---");
+            System.out.println(TextColor.RED + "\n\t\t\t\t--- Donation failed ---");
             System.out.println("\n\t\t\t\tRequirements:");
             System.out.println("\t\t\t\t- Must Be 18+ Years old to donate");
-            System.out.println("\t\t\t\t- Donation Amount Limit is 470 mL");
+            System.out.println("\t\t\t\t- Donation Amount Limit is 470 mL" + TextColor.RESET);
         }
     }
 
     @Override
     public void listDonations() {
         while (true) {
+            System.out.print(TextColor.BLUE);
             System.out.println("\n\t\t\t\t=========================================");
             System.out.println("\t\t\t\t---        List Donations Menu        ---");
             System.out.println("\t\t\t\t=========================================");
+            System.out.print(TextColor.CYAN);
             System.out.println("\t\t\t\t1. View Regular Donations");
             System.out.println("\t\t\t\t2. View Emergency Donations");
             System.out.println("\t\t\t\t3. Return to Donor Menu");
+            System.out.print(TextColor.YELLOW);
             System.out.print("\t\t\t\tEnter your choice: ");
             // Error Handling
             int choice = -1;
@@ -113,16 +126,15 @@ class BloodBank implements BloodBankOperations {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } catch (InputMismatchException e) {
-                System.out.println("\n\t\t\t\t--- Invalid input. Please enter a valid number ---");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid input. Please enter a valid number ---" + TextColor.RESET);
                 scanner.nextLine();
                 continue;
             }
-
             switch (choice) {
                 case 1:
                     System.out.println("\n\t\t\t\tRegular Donations:\n");
                     if (regularDonations.isEmpty()) {
-                        System.out.println("\n\t\t\t\t--- No regular donations recorded ---");
+                        System.out.println(TextColor.RED + "\n\t\t\t\t--- No regular donations recorded ---" + TextColor.RESET);
                     } else {
                         for (BloodDonation donation : regularDonations) {
                             System.out.println("\t\t\t\t" + donation);
@@ -132,7 +144,7 @@ class BloodBank implements BloodBankOperations {
                 case 2:
                     System.out.println("\n\t\t\t\tEmergency Donations:\n");
                     if (emergencyDonations.isEmpty()) {
-                        System.out.println("\n\t\t\t\t--- No emergency donations recorded ---");
+                        System.out.println(TextColor.RED + "\n\t\t\t\t--- No emergency donations recorded ---" + TextColor.RESET);
                     } else {
                         for (BloodDonation donation : emergencyDonations) {
                             System.out.println("\t\t\t\t" + donation);
@@ -142,7 +154,7 @@ class BloodBank implements BloodBankOperations {
                 case 3:
                     return;
                 default:
-                    System.out.println("\n\t\t\t\t--- Invalid choice. Please try again ---");
+                    System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid choice. Please try again ---" + TextColor.RESET);
             }
         }
     }
@@ -150,11 +162,10 @@ class BloodBank implements BloodBankOperations {
     @Override
     public void findCompatibleDonations(String requiredBloodType) {
         while (!isValidBloodType(requiredBloodType)) {
-            System.out.println("\n\t\t\t\t--- Invalid blood type. Blood type (A, B, AB, or O) ---");
+            System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid blood type. Blood type (A, B, AB, or O) ---" + TextColor.RESET);
             requiredBloodType = scanner.nextLine();
         }
-
-        System.out.println("\n\t\t\t\tCompatible Donations for " + requiredBloodType + ":\n");
+        System.out.println("\n\t\t\t\tCompatible Donations for " + requiredBloodType + ":");
         boolean found = false;
         for (BloodDonation donation : regularDonations) {
             if (isBloodTypeCompatible(donation.getBloodType(), requiredBloodType)) {
@@ -169,7 +180,7 @@ class BloodBank implements BloodBankOperations {
             }
         }
         if (!found) {
-            System.out.println("\n\t\t\t\t--- No compatible donations found ---");
+            System.out.println(TextColor.RED + "\n\t\t\t\t--- No compatible donations found ---" + TextColor.RESET);
         }
     }
 
@@ -191,12 +202,13 @@ class BloodBank implements BloodBankOperations {
 // =================================================== Main System ===================================================
 public class BloodBankManagementSystem {
     private static HashMap<String, String> donorAccounts = new HashMap<>();
-    // ======================================== Entry Point of program =======================================
+    // ======================================== Entry Point of program =======================================`
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         BloodBank bloodBank = new BloodBank(); 
 
         while (true) {
+            System.out.print(TextColor.BLUE);
             System.out.println("\n\t\t\t\t================================================");
             System.out.println("\t\t\t\t--     BBBB      AAA     N   N    K     K     --");
             System.out.println("\t\t\t\t--     B   B    A   A    NN  N    K    K      --");
@@ -204,29 +216,29 @@ public class BloodBankManagementSystem {
             System.out.println("\t\t\t\t--     B   B    A   A    N  NN    K    K      --");
             System.out.println("\t\t\t\t--     BBBB     A   A    N   N    K     K     --");
             System.out.println("\t\t\t\t================================================");
+            System.out.print(TextColor.CYAN);
             System.out.println("\t\t\t\t\t----- Blood Bank Login Menu -----\n");
             System.out.println("\t\t\t\t\t1. Login");
             System.out.println("\t\t\t\t\t2. Create New Account");  
             System.out.println("\t\t\t\t\t3. Exit");
-            System.out.print("\n\t\t\t\t\tEnter Your Choice: ");
+            System.out.print(TextColor.YELLOW + "\n\t\t\t\t\tEnter Your Choice: " + TextColor.RESET);
             // Error Handling for user input
             int choice = -1;
             try {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } catch (InputMismatchException e) {
-                System.out.println("\n\t\t\t\t--- Invalid input. Please enter a valid number ---");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid input. Please enter a valid number ---" + TextColor.RESET);
                 scanner.nextLine();
                 continue;
             }
-
             switch (choice) {
                 case 1:
                     clearScreen();
                     if (donorLogin(scanner)) {
                         handleDonorMenu(scanner, bloodBank);
                     } else {
-                        System.out.println("\n\t\t\t\t\tAccount Does Not Exist!");
+                        System.out.println(TextColor.RED + "\n\t\t\t\t\tAccount Does Not Exist!" + TextColor.RESET);
                     }
                     break;
                 case 2:
@@ -234,12 +246,12 @@ public class BloodBankManagementSystem {
                     createDonorAccount(scanner);
                     break;
                 case 3:
-                    System.out.println("\n\t\t\t\t\tExiting the system...\n");
+                    System.out.println(TextColor.GREEN + "\n\t\t\t\t\tExiting the system...\n" + TextColor.RESET);
                     scanner.close();
                     System.exit(0);  // Exit the program
                     break;
                 default:
-                    System.out.println("\n\t\t\t\t\t--- Invalid choice. Please try again ---");
+                    System.out.println(TextColor.RED + "\n\t\t\t\t\t--- Invalid choice. Please try again ---" + TextColor.RESET);
             }
         }
     }
@@ -250,9 +262,11 @@ public class BloodBankManagementSystem {
     }
     // ============================== Log In Account Method inside main class ==============================
     private static boolean donorLogin(Scanner scanner) {
+        System.out.print(TextColor.BLUE);
         System.out.println("\n\t\t\t\t\t======================");
         System.out.println("\t\t\t\t\t---     Log In     ---");
         System.out.println("\t\t\t\t\t======================");
+        System.out.print(TextColor.YELLOW);
         System.out.print("\n\t\t\t\t\tEnter Donor Username: ");
         String username = scanner.nextLine();
         System.out.print("\t\t\t\t\tEnter Donor Password: ");
@@ -262,25 +276,28 @@ public class BloodBankManagementSystem {
     }
     // ============================== Create New Account Method inside main class ==============================
     private static void createDonorAccount(Scanner scanner) {
+        System.out.print(TextColor.BLUE);
         System.out.println("\n\t\t\t\t\t==================================");
         System.out.println("\t\t\t\t\t---     Create New Account     ---");
         System.out.println("\t\t\t\t\t==================================");
+        System.out.print(TextColor.YELLOW);
         System.out.print("\n\t\t\t\t\tEnter New Username: ");
         String username = scanner.nextLine();
         if (donorAccounts.containsKey(username)) {
-            System.out.println("\t\t\t\t--- Username already exists. Please try a different one ---");
+            System.out.println(TextColor.RED + "\t\t\t\t--- Username already exists. Please try a different one ---" + TextColor.RESET);
             return;
         }
         System.out.print("\t\t\t\t\tEnter New Password: ");
         String password = scanner.nextLine();
 
         donorAccounts.put(username, password);
-        System.out.println("\n\t\t\t\t\t--- Account created successfully! ---");
+        System.out.println(TextColor.GREEN + "\n\t\t\t\t\t--- Account created successfully! ---" + TextColor.RESET);
     }
     // ============================== Donor Menu Mehod inside main class ============================== 
     private static void handleDonorMenu(Scanner scanner, BloodBank bloodBank) {
         clearScreen();
         while (true) {
+            System.out.print(TextColor.BLUE);
             System.out.println("\n\t\t\t\t==================================================");
             System.out.println("\t\t\t\t--     M     M    EEEEE    N     N    U   U     --");
             System.out.println("\t\t\t\t--     M M M M    E        N N   N    U   U     --");
@@ -288,26 +305,28 @@ public class BloodBankManagementSystem {
             System.out.println("\t\t\t\t--     M     M    E        N   N N    U   U     --");
             System.out.println("\t\t\t\t--     M     M    EEEEE    N     N    UUUUU     --");
             System.out.println("\t\t\t\t==================================================");
+            System.out.print(TextColor.CYAN);
             System.out.println("\t\t\t\t\t-------- Donor Menu --------\n");
             System.out.println("\t\t\t\t\t1. Add Regular Donation");
             System.out.println("\t\t\t\t\t2. Add Emergency Donation");
             System.out.println("\t\t\t\t\t3. List Donations");
             System.out.println("\t\t\t\t\t4. Find Compatible Donations");
             System.out.println("\t\t\t\t\t5. Log out");
-            System.out.print("\n\t\t\t\t\tEnter your choice: ");
+            System.out.print(TextColor.YELLOW + "\n\t\t\t\t\tEnter your choice: " + TextColor.RESET);
             // Error Handling
             int choice = -1;
             try {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } catch (InputMismatchException e) {
-                System.out.println("\n\t\t\t\t\t--- Invalid input. Please enter a valid number ---");
+                System.out.println(TextColor.RED + "\n\t\t\t\t\t--- Invalid input. Please enter a valid number ---" + TextColor.RESET);
                 scanner.nextLine();
                 continue;
             }
             switch (choice) {
                 case 1:
                     clearScreen();
+                    System.out.print(TextColor.BLUE);
                     System.out.println("\n\t\t\t\t===========================================");
                     System.out.println("\t\t\t\t---      Add Regular Donation Menu      ---");
                     System.out.println("\t\t\t\t===========================================");
@@ -315,6 +334,7 @@ public class BloodBankManagementSystem {
                     break;
                     case 2:
                     clearScreen();
+                    System.out.print(TextColor.BLUE);
                     System.out.println("\n\t\t\t\t=============================================");
                     System.out.println("\t\t\t\t---      Add Emergency Donation Menu      ---");
                     System.out.println("\t\t\t\t=============================================");
@@ -326,7 +346,8 @@ public class BloodBankManagementSystem {
                     break;
                 case 4:
                     clearScreen();
-                    System.out.println("\n\t\t\t\t=========================================");
+                    System.out.print(TextColor.BLUE);
+                    System.out.println("\n\t\t\t\t===========================================");
                     System.out.println("\t\t\t\t---      Find Compatible Donations      ---");
                     System.out.println("\t\t\t\t===========================================");
                     findCompatibleDonations(scanner, bloodBank);
@@ -335,7 +356,7 @@ public class BloodBankManagementSystem {
                     clearScreen();
                     return;
                 default:
-                    System.out.println("\t\t\t\t\t--- Invalid choice. Please try again ---");
+                    System.out.println(TextColor.RED + "\t\t\t\t\t--- Invalid choice. Please try again ---" + TextColor.RESET);
             }
         }
     }
@@ -343,12 +364,12 @@ public class BloodBankManagementSystem {
     private static void addRegularDonation(Scanner scanner, BloodBank bloodBank) {
         String bloodType;
         while (true) {
-            System.out.print("\n\t\t\t\tBlood Type: ");
+            System.out.print(TextColor.CYAN + "\n\t\t\t\tBlood Type: ");
             bloodType = scanner.nextLine().toUpperCase();
             if (bloodType.matches("A|B|AB|O")) {
                 break;
             } else {
-                System.out.println("\t\t\t\t--- Invalid Blood Type (Blood Type: A, B, AB, O) ---");
+                System.out.println(TextColor.RED + "\t\t\t\t--- Invalid Blood Type (Blood Type: A, B, AB, O) ---" + TextColor.RESET);
             }
         }
         // Enter Donor Name
@@ -363,12 +384,12 @@ public class BloodBankManagementSystem {
                 if (amount > 0) {
                     break;
                 } else {
-                    System.out.println("\n\t\t\t\tAmount must be positive");
-                    System.out.print("\t\t\t\tDonation Amount (ml): ");
+                    System.out.println(TextColor.RED + "\n\t\t\t\t--- Amount must be positive ---\n" + TextColor.RESET);
+                    System.out.print(TextColor.CYAN + "\t\t\t\tDonation Amount (ml): ");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("\n\t\t\t\t--- Invalid input. Please enter a numeric value ---\n");
-                System.out.print("\t\t\t\tDonation Amount (ml): ");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid input. Please enter a numeric value ---\n" + TextColor.RESET);
+                System.out.print(TextColor.CYAN + "\t\t\t\tDonation Amount (ml): ");
             }
         }
         // Age with error handling
@@ -380,12 +401,12 @@ public class BloodBankManagementSystem {
                 if (age >= 0) {
                     break;
                 } else {
-                    System.out.println("\t\t\t\tAge must be positive");
-                    System.out.print("\t\t\t\tAge: ");
+                    System.out.println(TextColor.RED + "\t\t\t\t--- Age must be positive ---" + TextColor.RESET);
+                    System.out.print(TextColor.CYAN + "\t\t\t\tAge: ");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("\t\t\t\t--- Invalid input. Please enter a numeric value ---\n");
-                System.out.print("\t\t\t\tAge: ");
+                System.out.println(TextColor.RED + "\t\t\t\t--- Invalid input. Please enter a numeric value ---\n" + TextColor.RESET);
+                    System.out.print(TextColor.CYAN + "\t\t\t\tAge: ");
             }
         }
         // Add inputted data
@@ -396,12 +417,12 @@ public class BloodBankManagementSystem {
     private static void addEmergencyDonation(Scanner scanner, BloodBank bloodBank) {
         String bloodType;
         while (true) {
-            System.out.print("\n\t\t\t\tBlood Type: ");
+            System.out.print(TextColor.CYAN + "\n\t\t\t\tBlood Type: ");
             bloodType = scanner.nextLine().toUpperCase();
             if (bloodType.matches("A|B|AB|O")) {
                 break;
             } else {
-                System.out.println("\n\t\t\t\t--- Invalid Blood Type (Blood Type: A, B, AB, O) ---");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid Blood Type (Blood Type: A, B, AB, O) ---" + TextColor.RESET);
             }
         }
         // Donont Name
@@ -416,12 +437,12 @@ public class BloodBankManagementSystem {
                 if (amount > 0) {
                     break;
                 } else {
-                    System.out.println("\n\t\t\t\tAmount must be positive");
-                    System.out.print("\t\t\t\tDonation Amount (ml): ");
+                    System.out.println(TextColor.RED + "\n\t\t\t\t--- Amount must be positive ---\n" + TextColor.RESET);
+                    System.out.print(TextColor.CYAN + "\t\t\t\tDonation Amount (ml): ");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("\n\t\t\t\t--- Invalid input. Please enter a numeric value ---\n");
-                System.out.print("\t\t\t\tDonation Amount (ml): ");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid input. Please enter a numeric value ---\n" + TextColor.RESET);
+                System.out.print(TextColor.CYAN + "\t\t\t\tDonation Amount (ml): ");
             }
         }
         // Urgent with error handling
@@ -433,8 +454,8 @@ public class BloodBankManagementSystem {
                 isUrgent = Boolean.parseBoolean(input);
                 break;
             } else {
-                System.out.println("\n\t\t\t\t--- Invalid input. Please enter true or false ---\n");
-                System.out.print("\t\t\t\tIs Urgent? (true/false): ");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid input. Please enter true or false ---\n" + TextColor.RESET);
+                System.out.print(TextColor.CYAN + "\t\t\t\tIs Urgent? (true/false): ");
             }
         }
         // Add Emergency donation
@@ -445,12 +466,12 @@ public class BloodBankManagementSystem {
     private static void findCompatibleDonations(Scanner scanner, BloodBank bloodBank) {
         String bloodType;
         while (true) {
-            System.out.print("\n\t\t\t\tBlood Type: ");
+            System.out.print(TextColor.CYAN + "\n\t\t\t\tBlood Type: ");
             bloodType = scanner.nextLine().toUpperCase();
             if (bloodType.matches("A|B|AB|O")) {
                 break;
             } else {
-                System.out.println("\n\t\t\t\t--- Invalid Blood Type (Blood Type: A, B, AB, O) ---");
+                System.out.println(TextColor.RED + "\n\t\t\t\t--- Invalid Blood Type (Blood Type: A, B, AB, O) ---" + TextColor.RESET);
             }
         }
         bloodBank.findCompatibleDonations(bloodType);
